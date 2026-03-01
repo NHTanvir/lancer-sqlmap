@@ -1,0 +1,18 @@
+[package]
+name = "sqlmap-payloads"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "Boundary + payload YAML registry for lancer-sqlmap (port of upstream xml/)"
+
+[dependencies]
+serde.workspace = true
+serde_yaml.workspace = true
+once_cell.workspace = true
+eyre.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+rand.workspace = true

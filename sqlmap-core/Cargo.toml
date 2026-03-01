@@ -1,0 +1,58 @@
+[package]
+name = "sqlmap-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "sqlmap-core: target/session/http/fingerprint/oracle/detector/enumerator for lancer-sqlmap"
+
+[dependencies]
+tokio.workspace = true
+tokio-util.workspace = true
+futures.workspace = true
+reqwest.workspace = true
+hyper.workspace = true
+rustls.workspace = true
+webpki-roots.workspace = true
+cookie_store.workspace = true
+httparse.workspace = true
+url.workspace = true
+
+governor.workspace = true
+parking_lot.workspace = true
+dashmap.workspace = true
+
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+
+redb.workspace = true
+
+base64.workspace = true
+hex.workspace = true
+md-5.workspace = true
+sha1.workspace = true
+sha2.workspace = true
+
+regex.workspace = true
+once_cell.workspace = true
+lazy_static.workspace = true
+
+strsim.workspace = true
+scraper.workspace = true
+
+eyre.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+
+chrono.workspace = true
+uuid.workspace = true
+rand.workspace = true
+bytes.workspace = true
+percent-encoding.workspace = true
+urlencoding.workspace = true
+
+oauth2.workspace = true
+async-graphql-parser.workspace = true

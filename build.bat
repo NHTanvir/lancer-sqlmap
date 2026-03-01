@@ -4,7 +4,7 @@ title lancer-sqlmap Build
 
 REM ============================================================
 REM  build.bat -- Build lancer-sqlmap.exe for Windows
-REM  Output: build$PKG.exe
+REM  Output: build\lancer-sqlmap.exe
 REM
 REM  Requirements:
 REM    - Rust / Cargo   https://rustup.rs
@@ -26,7 +26,7 @@ echo  Output : %BUILD%\%BIN%
 echo.
 
 REM Locate cargo
-where cargo >/dev/null 2>&1
+where cargo >nul 2>&1
 if errorlevel 1 (
     set "CARGO=%USERPROFILE%\.cargo\bin\cargo.exe"
     if not exist "!CARGO!" (
@@ -39,8 +39,8 @@ if errorlevel 1 (
     set "CARGO=cargo"
 )
 
-echo  [1/2]  Building release binary...
-"!CARGO!" build --release
+echo  [1/2]  Building release binary (workspace member: lancer-sqlmap)...
+"!CARGO!" build --release -p lancer-sqlmap
 if errorlevel 1 (
     echo  ERROR: cargo build failed
     pause
@@ -49,7 +49,7 @@ if errorlevel 1 (
 
 echo  [2/2]  Copying to build\...
 if not exist "%BUILD%" mkdir "%BUILD%"
-copy /Y "%REPO%\target\release\%BIN%" "%BUILD%\" >/dev/null
+copy /Y "%REPO%\target\release\%BIN%" "%BUILD%\" >nul
 if errorlevel 1 (
     echo  ERROR: %BIN% not found in target\release
     pause

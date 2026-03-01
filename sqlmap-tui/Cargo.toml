@@ -1,0 +1,22 @@
+[package]
+name = "sqlmap-tui"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+repository.workspace = true
+description = "ratatui-based interactive sql-shell/os-shell REPL for lancer-sqlmap"
+
+[dependencies]
+sqlmap-core = { path = "../sqlmap-core" }
+sqlmap-dbms = { path = "../sqlmap-dbms" }
+
+tokio.workspace = true
+ratatui.workspace = true
+crossterm.workspace = true
+
+eyre.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+chrono.workspace = true
